@@ -1,29 +1,54 @@
-#include <iostream>
 #define SDL_MAIN_HANDLED
-
-#include <SDL2/SDL.h>
+#define PI 3.14159265359
+#include <iostream>
+#include <cmath>
+//#include <SDL2/SDL.h>
+#include "src/lib/matrix.h"
 
 
 const int WIDTH = 800, HEIGHT = 600;
 
 
+//WinMain
 
-int WinMain(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
+    srand((unsigned) time(NULL));
+
+    matrix4* mat1 = new matrix4({
+        {1, 5, 1, -4},
+        {-3, 13, 7, 6},
+        {-1, -23, 2, 45},
+        {1, 2, 3, 4}
+    });
+    matrix4* mat2 = new matrix4({
+        {1, 2, 3, 4},
+        {1, 2, 3, 4},
+        {1, 2, 3, 4},
+        {1, 2, 3, 4}
+    });
+
+    // mat2->display();
+    // std::cout << std::endl;
+    // mat2->transpose()->display();
+    // std::cout << std::endl;
     
 
-    SDL_Window *win = SDL_CreateWindow("Hello world", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, 0);
+    /*
+    SDL_Init(SDL_INIT_EVERYTHING);
+
+    SDL_Window *win = SDL_CreateWindow("Hello world", 
+            SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED, 
+            WIDTH,
+            HEIGHT, 
+            SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL);
+    SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
     SDL_RenderClear(renderer);
-
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
     SDL_RenderDrawLine(renderer, 100, 100, 300, 300);
-
     SDL_RenderPresent(renderer);
 
     if (win == NULL)
@@ -32,12 +57,31 @@ int WinMain(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    mesh Mesh;
+    
     SDL_Event winEvent;
 
     while (true)
     {
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        for (int i = 0; i < 360; i++)
+        {
+            SDL_RenderDrawLine(renderer, 
+                (int)(std::cos(i * PI / 180) * 200) + 200,
+                (int)(std::sin(i * PI / 180) * 200) + 200,
+                (int)(std::cos((i + 1) * PI / 180) * 200) + 200,
+                (int)(std::sin((i + 1) * PI / 180) * 200) + 200); 
+        }
+        SDL_RenderPresent(renderer);
         if (SDL_PollEvent(&winEvent))
         {
+            std::cout << winEvent.type << std::endl;
+            if (winEvent.type == SDL_QUIT) {
+                
+            }
             if (winEvent.type == SDL_QUIT)
             {
                 break;
@@ -48,6 +92,6 @@ int WinMain(int argc, char *argv[])
     
     SDL_DestroyWindow(win);
     SDL_Quit();
-
+    */
     return EXIT_SUCCESS;
 }

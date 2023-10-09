@@ -10,6 +10,11 @@ FLAGS=-lSDL2main -lSDL2 -static-libgcc -static-libstdc++
 DEBUG=$(ENTRY).cpp $(FLAGS) -o $(EXE)
 
 all:
+	g++ -c main.cpp src/lib/*.cpp
+	g++ *.o
+	rm -f *.o
+
+debug64:
 	$(COMPILER64) $(LIBS64) $(DEBUG)_x64
 
 release64:
