@@ -1,7 +1,6 @@
 #define SDL_MAIN_HANDLED
 #define PI 3.14159265359
 #include <iostream>
-#include <cmath>
 //#include <SDL2/SDL.h>
 #include "src/lib/matrix.h"
 
@@ -22,13 +21,13 @@ int main(int argc, char *argv[])
         {1, 2, 3, 4}
     });
     matrix4* mat2 = new matrix4({
-        {1, 2, 3, 4},
-        {1, 2, 3, 4},
-        {1, 2, 3, 4},
-        {1, 2, 3, 4}
+        {1, 0, 0, 1},
+        {0, 1, 0, 2},
+        {0, 0, 1, 3},
+        {0, 0, 0, 1}
     });
 
-    // mat2->display();
+    mat2->translate(1, 0, 0)->display();
     // std::cout << std::endl;
     // mat2->transpose()->display();
     // std::cout << std::endl;
