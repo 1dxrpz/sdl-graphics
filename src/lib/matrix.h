@@ -6,6 +6,8 @@ class vec3;
 #ifndef matrix_h
 #define matrix_h
 
+float precision(float n);
+
 class matrix
 {
 private:
@@ -35,14 +37,16 @@ public:
 class vec3
 {
 private:
-    float x, y, z;
 public:
-    
+    float x, y, z;
     vec3();
     vec3(float x, float y, float z);
     matrix* multiply(matrix m_matrix);
     //~matrix4();
     matrix* toMatrix();
+    float magnitude();
+    vec3* normalize();
+    vec3* dotProduct(vec3* v_vec);
     void display();
 };
 

@@ -1,9 +1,10 @@
 #include "matrix.h"
 #include <math.h>
 #include <iostream>
+#define M_PRECISION 1.0e-6f
 
 float precision(float n) {
-    return n < 0.0000001f && n > -0.0000001f ? 0 : n;
+    return n < M_PRECISION && n > -M_PRECISION ? 0 : n;
 }
 
 matrix::matrix(int n, int m)
@@ -120,46 +121,32 @@ matrix* matrix::scale(float x, float y, float z) {
 	return m_scale->multiply(*this);
 }
 matrix* matrix::rotate(float x, float y, float z) {
-	matrix* result = this;
-	if (x != 0)
-	{
-		matrix* m_Rx = new matrix({
-			{1, 0, 0, 0},
-			{0, cos(x), sin(x), 0},
-			{0, -sin(x), cos(x), 0},
-			{0, 0, 0, 1}
-		});
-		result = m_Rx->multiply(*result);
-	}
-	if (y != 0)
-	{
-		matrix* m_Ry = new matrix({
-			{cos(y), 0, sin(y), 0},
-			{0, 1, 0, 0},
-			{-sin(y), 0, cos(y), 0},
-			{0, 0, 0, 1}
-		});
-		result = m_Ry->multiply(*result);
-	}
-	if (z != 0)
-	{
-		matrix* m_Rz = new matrix({
-			{precision(cosf(z)), precision(-sinf(z)), 0, 0},
-			{precision(sinf(z)), precision(cosf(z)), 0, 0},
-			{0, 0, 1, 0},
-			{0, 0, 0, 1}
-		});
-		m_Rz->display();
-		result = m_Rz->multiply(*result);
-	}
-	return result;
+	matrix* m_Rx = new matrix({
+		{1, 0, 0, 0},
+		{0, cos(x), -sin(x), 0},
+		{0, sin(x), cos(x), 0},
+		{0, 0, 0, 1}
+	});
+	matrix* m_Ry = new matrix({
+		{cos(y), 0, sin(y), 0},
+		{0, 1, 0, 0},
+		{-sin(y), 0, cos(y), 0},
+		{0, 0, 0, 1}
+	});
+	matrix* m_Rz = new matrix({
+		{precision(cosf(z)), precision(-sinf(z)), 0, 0},
+		{precision(sinf(z)), precision(cosf(z)), 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0, 1}
+	});
+	return m_Rx->multiply(*m_Ry->multiply(*m_Rz->multiply(*this)));
 }
 
 matrix* matrix::project(float aspect, float fov, float far, float near) {
 	matrix* m_projection = new matrix({
-		{1 / (aspect * tan(fov / 2)), 0, 0, 0},
-		{0, 1 / (tan(fov / 2)), 0, 0},
-		{0, 0, -((far + near) / (far - near)), -2 * far * near * (far - near)},
+		{1 / (aspect * tan(fov / 2.0f)), 0, 0, 0},
+		{0, 1.0f / (tan(fov / 2.0f)), 0, 0},
+		{0, 0, -((far + near) / (far - near)), -2.0f * far * near * (far - near)},
 		{0, 0, -1, 0}
 	});
 
@@ -203,4 +190,16 @@ matrix* vec3::multiply(matrix m_matrix) {
 
 void vec3::display() {
     std::cout << x << " " << y << " " << z << std::endl;
+}
+
+float vec3::magnitude() {
+	return sqrt(x * x + y * y + z * z);
+}
+
+vec3* vec3::normalize() {
+	float length = this->magnitude();
+	return new vec3(this->x / length, this->y / length, this->z / length);
+}
+vec3* vec3::dotProduct(vec3* v_vec) {
+	return new vec3(x * v_vec->x, y * v_vec->y, z * v_vec->z);
 }

@@ -1,32 +1,22 @@
 #define SDL_MAIN_HANDLED
 #define PI 3.14159265359
 #include <iostream>
-//#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 #include "src/lib/matrix.h"
 #include <math.h>
 
 const int WIDTH = 800, HEIGHT = 600;
-
+#include <iomanip>
 
 //WinMain
 
 int main(int argc, char *argv[])
 {
     srand((unsigned) time(NULL));
+    //std::setprecision(1);
 
-    vec3* vec = new vec3(1, 1, 1);
+    float x = 90 * PI / 180;
     
-    vec
-        ->toMatrix()
-        ->rotate(90 * PI / 180, 0 * PI / 180, 0 * PI / 180)
-        ->toVec3()
-        ->display();
-
-    // mat2->transpose()->display();
-    // std::cout << std::endl;
-    
-
-    /*
     SDL_Init(SDL_INIT_EVERYTHING);
 
     SDL_Window *win = SDL_CreateWindow("Hello world", 
@@ -48,42 +38,96 @@ int main(int argc, char *argv[])
         std::cout << "Error: " << SDL_GetError() << std::endl;
         return EXIT_FAILURE;
     }
-
-    mesh Mesh;
     
     SDL_Event winEvent;
 
+    int offsetX = WIDTH / 2;
+    int offsetY = HEIGHT / 2;
+    float offset = 0;
+
     while (true)
     {
+        try
+        {
+            /* code */
+        
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        for (int i = 0; i < 360; i++)
+        
+        std::vector<vec3*> vertices;
+    
+        vertices.push_back(new vec3(0, 0, 0));
+        vertices.push_back(new vec3(0, 1, 0));
+        vertices.push_back(new vec3(0, 1, 1));
+        vertices.push_back(new vec3(0, 0, 1));
+
+        vertices.push_back(new vec3(1, 0, 0));
+        vertices.push_back(new vec3(1, 1, 0));
+        vertices.push_back(new vec3(1, 1, 1));
+        vertices.push_back(new vec3(1, 0, 1));
+
+        vertices.push_back(new vec3(0, 1, 0));
+        vertices.push_back(new vec3(1, 1, 0));
+        vertices.push_back(new vec3(1, 1, 1));
+        vertices.push_back(new vec3(0, 1, 1));
+
+        vertices.push_back(new vec3(0, 0, 1));
+        vertices.push_back(new vec3(1, 0, 1));
+        vertices.push_back(new vec3(1, 1, 1));
+        vertices.push_back(new vec3(0, 1, 1));
+
+        vertices.push_back(new vec3(0, 0, 0));
+        vertices.push_back(new vec3(0, 0, 1));
+        vertices.push_back(new vec3(1, 0, 1));
+        vertices.push_back(new vec3(1, 0, 0));
+        
+        std::vector<vec3*> points;
+        offset += 0.02f;
+        for (int i = 0; i < vertices.size(); i++)
         {
-            SDL_RenderDrawLine(renderer, 
-                (int)(std::cos(i * PI / 180) * 200) + 200,
-                (int)(std::sin(i * PI / 180) * 200) + 200,
-                (int)(std::cos((i + 1) * PI / 180) * 200) + 200,
-                (int)(std::sin((i + 1) * PI / 180) * 200) + 200); 
+            vec3* point = vertices[i]
+                ->toMatrix()
+                ->scale(20, 20, 20)
+                ->translate(0, 0, 5)
+                ->rotate(offset, offset, offset)
+                ->project((float)WIDTH / (float)(HEIGHT + 20), 2180.0f, 100.0f, 0.001f)
+                ->scale(2, 2, 2)
+                ->toVec3();
+            points.push_back(point);
+
+            point->display();
         }
+
+        for (int i = 0; i < points.size(); i++)
+        {
+            int nextIndex = i == points.size() - 1 ? 0 : i + 1;
+            if (nextIndex % 4 != 0)
+            {
+            SDL_RenderDrawLine(renderer,
+                (int)points[i]->x + offsetX, (int)points[i]->y + offsetY,
+                (int)points[nextIndex]->x + offsetX, (int)points[nextIndex]->y + offsetY);
+            }
+        }
+
         SDL_RenderPresent(renderer);
         if (SDL_PollEvent(&winEvent))
         {
-            std::cout << winEvent.type << std::endl;
-            if (winEvent.type == SDL_QUIT) {
-                
-            }
             if (winEvent.type == SDL_QUIT)
             {
                 break;
             }
         }
-        
+        }
+        catch(const std::exception& e)
+        {
+            SDL_Log(e.what());
+        }
     }
     
     SDL_DestroyWindow(win);
     SDL_Quit();
-    */
+    
     return EXIT_SUCCESS;
 }
