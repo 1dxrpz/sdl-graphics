@@ -3,7 +3,7 @@
 #include <iostream>
 //#include <SDL2/SDL.h>
 #include "src/lib/matrix.h"
-
+#include <math.h>
 
 const int WIDTH = 800, HEIGHT = 600;
 
@@ -14,21 +14,14 @@ int main(int argc, char *argv[])
 {
     srand((unsigned) time(NULL));
 
-    matrix4* mat1 = new matrix4({
-        {1, 5, 1, -4},
-        {-3, 13, 7, 6},
-        {-1, -23, 2, 45},
-        {1, 2, 3, 4}
-    });
-    matrix4* mat2 = new matrix4({
-        {1, 0, 0, 1},
-        {0, 1, 0, 2},
-        {0, 0, 1, 3},
-        {0, 0, 0, 1}
-    });
+    vec3* vec = new vec3(1, 1, 1);
+    
+    vec
+        ->toMatrix()
+        ->rotate(90 * PI / 180, 0 * PI / 180, 0 * PI / 180)
+        ->toVec3()
+        ->display();
 
-    mat2->translate(1, 0, 0)->display();
-    // std::cout << std::endl;
     // mat2->transpose()->display();
     // std::cout << std::endl;
     

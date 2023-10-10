@@ -1,29 +1,48 @@
 #include <vector>
-#include <cmath>
-#ifndef matrix4_h
-#define matrix4_h
 
-class matrix4
+class matrix;
+class vec3;
+
+#ifndef matrix_h
+#define matrix_h
+
+class matrix
 {
 private:
-    std::vector<std::vector<float>> data = {
-        {0, 0, 0, 0},
-        {0, 0, 0, 0},
-        {0, 0, 0, 0},
-        {0, 0, 0, 0}};
-
+    int size_n, size_m;
 public:
-    matrix4();
-    matrix4(std::vector<std::vector<float>> data);
+    std::vector<std::vector<float>> data = {};
+    matrix(int n, int m);
+    matrix(std::vector<std::vector<float>> data);
+    //~matrix();
+    vec3* toVec3();
+    matrix* multiply(matrix matrix);
+    matrix* add(matrix matrix);
+    matrix* subtract(matrix matrix);
+    matrix* transpose();
+    matrix* rotate(float x, float y, float z);
+    matrix* scale(float x, float y, float z);
+    matrix* translate(float x, float y, float z);
+    matrix* project(float aspect, float fov, float far, float near);
+    void display();
+};
+
+#endif
+
+#ifndef vec3_h
+#define vec3_h
+
+class vec3
+{
+private:
+    float x, y, z;
+public:
+    
+    vec3();
+    vec3(float x, float y, float z);
+    matrix* multiply(matrix m_matrix);
     //~matrix4();
-    matrix4* multiply(matrix4 matrix);
-    matrix4* add(matrix4 matrix);
-    matrix4* subtract(matrix4 matrix);
-    matrix4* transpose();
-    matrix4* rotate(float x, float y, float z);
-    matrix4* scale(float x, float y, float z);
-    matrix4* translate(float x, float y, float z);
-    matrix4* project(float aspect, float fov, float far, float near);
+    matrix* toMatrix();
     void display();
 };
 
