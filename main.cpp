@@ -13,11 +13,24 @@ const int WIDTH = 800, HEIGHT = 600;
 int main(int argc, char *argv[])
 {
     srand((unsigned) time(NULL));
-    //std::setprecision(1);
 
     float x = 90 * PI / 180;
     
     SDL_Init(SDL_INIT_EVERYTHING);
+
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
+
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); 
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
 
     SDL_Window *win = SDL_CreateWindow("Hello world", 
             SDL_WINDOWPOS_UNDEFINED,
@@ -89,15 +102,13 @@ int main(int argc, char *argv[])
         {
             vec3* point = vertices[i]
                 ->toMatrix()
-                ->scale(20, 20, 20)
-                ->translate(0, 0, 5)
+                ->scale(10, 10, 10)
+                ->translate(0, 0, 25)
                 ->rotate(offset, offset, offset)
-                ->project((float)WIDTH / (float)(HEIGHT + 20), 2180.0f, 100.0f, 0.001f)
-                ->scale(2, 2, 2)
+                ->project(1.0f, 90.0f * PI / 180.0f, 1000.0f, 0.01f)
+                ->scale(5, 5, 5)
                 ->toVec3();
             points.push_back(point);
-
-            point->display();
         }
 
         for (int i = 0; i < points.size(); i++)
@@ -105,9 +116,9 @@ int main(int argc, char *argv[])
             int nextIndex = i == points.size() - 1 ? 0 : i + 1;
             if (nextIndex % 4 != 0)
             {
-            SDL_RenderDrawLine(renderer,
-                (int)points[i]->x + offsetX, (int)points[i]->y + offsetY,
-                (int)points[nextIndex]->x + offsetX, (int)points[nextIndex]->y + offsetY);
+            SDL_RenderDrawLineF(renderer,
+                points[i]->x + offsetX, points[i]->y + offsetY,
+                points[nextIndex]->x + offsetX, points[nextIndex]->y + offsetY);
             }
         }
 

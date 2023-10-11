@@ -144,9 +144,9 @@ matrix* matrix::rotate(float x, float y, float z) {
 
 matrix* matrix::project(float aspect, float fov, float far, float near) {
 	matrix* m_projection = new matrix({
-		{1 / (aspect * tan(fov / 2.0f)), 0, 0, 0},
+		{1.0f / (aspect * tan(fov / 2.0f)), 0, 0, 0},
 		{0, 1.0f / (tan(fov / 2.0f)), 0, 0},
-		{0, 0, -((far + near) / (far - near)), -2.0f * far * near * (far - near)},
+		{0, 0, -((far + near) / (far - near)), (-2.0f * far * near) / (far - near)},
 		{0, 0, -1, 0}
 	});
 
@@ -179,7 +179,6 @@ matrix* vec3::multiply(matrix m_matrix) {
     float w = result->data[3][0];
     if (w != 0.0f)
     {
-        std::cout << w << std::endl;
         result->data[0][0] /= w;
         result->data[1][0] /= w;
         result->data[2][0] /= w;
